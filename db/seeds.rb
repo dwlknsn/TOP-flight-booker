@@ -7,7 +7,7 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-airports = [
+airport_data = [
   { region: "North America", country: "United States", city: "Washington D.C.", code: "DCA" },
   { region: "North America", country: "United States", city: "Harrisburg", state: "Pennsylvania", code: "LAN" },
   { region: "North America", country: "United States", city: "Atlanta", state: "Georgia", code: "ATL" },
@@ -26,4 +26,18 @@ airports = [
   { region: "Asia Pacific", country: "New Zealand", city: "Wellington", code: "WLG" }
 ]
 
-airports.each { |airport| Airport.create!(airport) }
+airports = airport_data.map do |airport|
+  Airport.create!(airport)
+end
+
+airports.each do |a|
+  3.times do |day| # flights for each of the next three days
+    3.times do |_| # 3 flights per day
+      a.departing_flights.create!(
+        arrival_airport: Airport.where.not(id: a.id).sample,
+        departure_datetime: (day + 1).days.from_now.beginning_of_day + rand(24).hours,
+        duration_minutes: rand(600) + 60
+      )
+    end
+  end
+end
