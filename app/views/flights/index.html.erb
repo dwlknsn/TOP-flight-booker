@@ -1,33 +1,36 @@
 <h1>Flights#index</h1>
 <p>Find me in app/views/flights/index.html.erb</p>
 
-<%= form_for :search, url: flights_index_path, method: :get do |f| %>
+<%= form_with url: flights_path, method: :get do |f| %>
+
   <%= f.label "departure_airport" %>
-  <%= f.collection_select(:departure_airport_id, @airports, :id, :code, prompt: true) %>
+  <%= f.collection_select(:departure_airport_id, @airports, :id, :code,
+                          selected: @filters[:departure_airport_id],
+                          prompt: true,
+                          include_blank: true) %>
+
   <%= f.label "arrival_airport" %>
-  <%= f.collection_select(:arrival_airport_id, @airports, :id, :code, prompt: true) %>
+  <%= f.collection_select(:arrival_airport_id, @airports, :id, :code,
+                          selected: @filters[:arrival_airport_id],
+                          prompt: true,
+                          include_blank: true) %>
+
   <%= f.label "passenger_count" %>
-  <%= f.number_field :passenger_count, min: 1, max: 4, value: 1 %>
+  <%= f.select :passenger_count, [1, 2, 3, 4], selected: @filters[:passenger_count] %>
+
   <%= f.label "departure_date" %>
-  <%= f.date_field :departure_date, min: Date.tomorrow, value: Date.tomorrow %>
+  <%= f.date_field :departure_date, min: Date.tomorrow, value: @filters[:departure_date] %>
+
   <%= f.submit "Search" %>
 <% end %>
 
 <h2>Flights</h2>
 <h3>Results: <%= @flights.count %></h3>
-<table>
-  <tr>
-    <th>Departing From</th>
-    <th>Destination</th>
-    <th>Departing at DateTime</th>
-    <th>Duration</th>
-  </tr>
-  <% @flights.each do |flight| %>
-    <tr>
-      <td><%= flight.departure_airport.code %></td>
-      <td><%= flight.arrival_airport.code %></td>
-      <td><%= flight.departure_datetime %></td>
-      <td><%= flight.duration_minutes %> mins</td>
-    <tr>
+
+<% if @flights.any? %>
+  <%= form_with model: Booking.new, url: new_booking_path, method: :get do |f| %>
+    <%= f.hidden_field :passenger_count, value: @filters[:passenger_count] %>
+    <%= f.collection_select :flight_id, @flights, :id, :flight_details %>
+    <%= f.submit "Select Flight"%>
   <% end %>
-</table>
+<% end %>
