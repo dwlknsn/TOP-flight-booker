@@ -4,15 +4,38 @@
 
 <h2>Enter Passenger Details:</h2>
 
-<%= form_with model: @booking, url: bookings_path, method: :post do |f| %>
+<%= form_with model: @booking, url: bookings_path, method: :post,
+    data: {
+      controller: "booking-form",
+      booking_form_passenger_count_value: @booking.passengers.size
+    } do |f| %>
+
   <%= f.hidden_field :flight_id %>
-  <%= f.fields_for :passengers do |passenger_form| %>
-    <div>
-      <%= passenger_form.label :name %>
-      <%= passenger_form.text_field :name %>
-      <%= passenger_form.label :email%>
-      <%= passenger_form.text_field :email%>
-    </div>
-  <% end %>
+  <p>
+    Passenger Count: <span data-booking-form-target="passengerCount"></span>
+  </p>
+  <div data-booking-form-target="passengerForm" >
+    <%= f.fields_for :passengers do |passenger_form| %>
+      <div>
+        <%= passenger_form.label :name %>
+        <%= passenger_form.text_field :name %>
+        <%= passenger_form.label :email%>
+        <%= passenger_form.text_field :email%>
+        <%= button_tag "Remove", type: :button, data: { action: "click->booking-form#removePassenger" } %>
+      </div>
+    <% end %>
+  </div>
+  <%= button_tag "Add Passenger", type: :button, data: { action: "click->booking-form#addPassenger" } %>
   <%= f.submit "Book Flight" %>
+
+  <template data-booking-form-target="passengerTemplate" >
+    <div>
+      <%= label_tag :name %>
+      <%= text_field_tag :name %>
+      <%= label_tag :email %>
+      <%= text_field_tag :email %>
+      <%= button_tag "Remove", type: :button, data: { action: "click->booking-form#removePassenger" } %>
+    </div>
+  </template>
+
 <% end %>
