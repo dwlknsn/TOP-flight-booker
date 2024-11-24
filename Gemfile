@@ -55,6 +55,7 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
   gem "pry", "~> 0.15.0"
+  gem "letter_opener", "~> 1.10"
 end
 
 group :test do

@@ -1,0 +1,12 @@
+Hi, <%= @passenger.name %>
+
+You have successfully booked your flight:
+<%= @flight.flight_details %>
+
+To view your booking, please click on the link below:
+
+======================================================
+<%= booking_url(@booking) %>
+======================================================
+
+Thanks for booking your flight with us and have a great day!

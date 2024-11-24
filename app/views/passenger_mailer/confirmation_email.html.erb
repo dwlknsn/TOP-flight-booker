@@ -1,0 +1,10 @@
+<h1>Hi, <%= @passenger.name %></h1>
+<p>
+  You have successfully booked your flight:
+  <%= @flight.flight_details %>
+</p>
+<p>
+  To view your booking, please click on the link below:
+  <%= link_to "View Booking", booking_url(@booking) %>
+</p>
+<p>Thanks for booking your flight with us and have a great day!</p>
