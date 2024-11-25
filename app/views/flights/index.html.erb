@@ -30,7 +30,15 @@
 <% if @flights.any? %>
   <%= form_with model: Booking.new, url: new_booking_path, method: :get do |f| %>
     <%= f.hidden_field :passenger_count, value: @filters[:passenger_count] %>
-    <%= f.collection_select :flight_id, @flights, :id, :flight_details %>
+    <%#= f.collection_select :flight_id, @flights, :id, :flight_details %>
+    <%= f.collection_radio_buttons :flight_id, @flights, :id, :flight_details do |b| %>
+      <div>
+        <%= b.label(class: "radio-button-label") do %>
+          <%= b.radio_button(class: "radio-button-input") %>
+          <%= b.text %>
+        <% end %>
+      </div>
+    <% end %>
     <%= f.submit "Select Flight"%>
   <% end %>
 <% end %>
